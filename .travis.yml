@@ -7,8 +7,7 @@ matrix:
     - os: windows
       language: sh
       before_install:
-        - git clone https://github.com/pyenv-win/pyenv-win.git $HOME/.pyenv
-        - export PATH="$HOME/.pyenv/pyenv-win/bin:$HOME/.pyenv/pyenv-win/shims:$PATH"
+        - choco install pyenv-win
         - pyenv install 3.8
         - pyenv rehash
         - pyenv global 3.8
