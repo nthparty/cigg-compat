@@ -7,11 +7,16 @@ matrix:
     - os: windows
       language: sh
       before_install:
-        - choco install pyenv-win
-        - pyenv install 3.8
+        - git clone https://github.com/pyenv-win/pyenv-win.git $HOME/.pyenv
+        - export PATH="$HOME/.pyenv/pyenv-win/bin:$HOME/.pyenv/pyenv-win/shims:$PATH"
+        - pyenv install -q 3.7.1
         - pyenv rehash
-        - pyenv global 3.8
+        - pyenv local 3.7.1
+    - os: linux
+      language: python
+      python: 3.7
+    - os: osx
+      language: generic
 script:
   - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
-  - python -V
   - python test.py
