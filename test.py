@@ -24,5 +24,5 @@ try:
     length_ = ctypes.create_string_buffer(len(data).to_bytes(4, 'little'))
 except:
     length_ = ctypes.create_string_buffer(bytes([128, 12, 0, 0]))
-lib.server_encrypt_to_self(ciphertext_, key_, message_, length_)
+lib.server_encrypt_to_self(ciphertext_, key_, message_, 32)
 print(ciphertext_.raw)
