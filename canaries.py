@@ -104,10 +104,10 @@ class canaries():
                         chirp = chirp.decode()
 
                     # Record the outputs.
-                    self.outputs.append(
+                    self.outputs.append((
                         (system, path),
                         (r, type(chirp), chirp)
-                    )
+                    ))
 
                     # Check that results are correct.
                     if r != 0 or chirp != 'chirp':
@@ -115,21 +115,21 @@ class canaries():
 
                 except:
                     lib = None
-                    self.exceptions.append(
+                    self.exceptions.append((
                         (system, path),
                         (
                             sys.exc_info()[0], sys.exc_info()[1],
                             sys.exc_info()[2].tb_lineno
                         )
-                    )
+                    ))
         except:
-            self.exceptions.append(
+            self.exceptions.append((
                 (system, path),
                 (
                     sys.exc_info()[0], sys.exc_info()[1],
                     sys.exc_info()[2].tb_lineno
                 )
-            )
+            ))
 
         return lib
 
