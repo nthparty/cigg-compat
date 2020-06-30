@@ -9,9 +9,9 @@ matrix:
       before_install:
         - git clone https://github.com/pyenv-win/pyenv-win.git $HOME/.pyenv
         - export PATH="$HOME/.pyenv/pyenv-win/bin:$HOME/.pyenv/pyenv-win/shims:$PATH"
-        - pyenv install -q 3.8
+        - pyenv install 3.8
         - pyenv rehash
-        - pyenv local 3.8
+        - pyenv global 3.8
 script:
   - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
   - python -V
