@@ -12,6 +12,7 @@ lib = canaries.load({
 assert(lib is not None)
 
 # Check some of the cryptographic primitives it exports.
+import ctypes
 import secrets
 
 key = bytes(secrets.token_bytes(32))
