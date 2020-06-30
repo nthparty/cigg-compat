@@ -14,7 +14,7 @@ assert(lib is not None)
 # Check some of the cryptographic primitives it exports.
 import ctypes
 
-key = bytes(list(range(32))
+key = bytes(list(range(32)))
 data = bytes(list(range(32))*10)
 
 ciphertext_ = ctypes.create_string_buffer(len(data)+16)
