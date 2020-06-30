@@ -21,4 +21,11 @@ ciphertext_ = ctypes.create_string_buffer(len(data)+16)
 key_ = ctypes.create_string_buffer(key)
 message_ = ctypes.create_string_buffer(bytes(data))
 lib.server_encrypt_to_self(ciphertext_, key_, message_, len(data))
-print(ciphertext_.raw)
+ciphertext = bytes(ciphertext_.raw)
+
+message_ = ctypes.create_string_buffer(len(ciphertext)-16)
+ciphertext_ = ctypes.create_string_buffer(bytes(ciphertext))
+lib.server_decrypt_from_self(message_, key_, ciphertext_, len(ciphertext_))
+data_ = bytes(message_.raw)
+
+assert(data == data_)
