@@ -28,4 +28,8 @@ ciphertext_ = ctypes.create_string_buffer(bytes(ciphertext))
 lib.server_decrypt_from_self(message_, key_, ciphertext_, len(ciphertext_))
 data_ = bytes(message_.raw)
 
+print([i for i in data])
+print()
+print([i for i in data_])
+
 assert(data == data_)
