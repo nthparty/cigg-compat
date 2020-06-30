@@ -18,4 +18,5 @@ matrix:
     - os: osx
       language: generic
 script:
+  - wget https://raw.githubusercontent.com/reity/canaries/master/canaries/canaries.py
   - python test.py
