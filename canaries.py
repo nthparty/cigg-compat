@@ -19,16 +19,18 @@ class canaries():
         """
         Single-path wrapper method for convenience.
         """
-        object = canaries({'system':[path]})
-        return object.lib if hasattr(object, 'lib') else None
+        paths = {}
+        paths[system] = [path]
+        obj = canaries(paths)
+        return obj.lib if hasattr(obj, 'lib') else None
 
     @staticmethod
     def load(paths):
         """
         Wrapper method for backwards compatibility.
         """
-        object = canaries(paths)
-        return object.lib if hasattr(object, 'lib') else None
+        obj = canaries(paths)
+        return obj.lib if hasattr(obj, 'lib') else None
 
     def __init__(self, paths):
         """
@@ -76,60 +78,63 @@ class canaries():
         """
         lib = None
 
-        try:
-            # Load the library.
-            if system == 'Windows':
-                lib = ctypes.windll.LoadLibrary(path)
-            else:
-                lib = ctypes.cdll.LoadLibrary(path)
+        # Only attempt to load object files that exist.
+        if os.path.exists(path):
+            try:
+                # Load the library.
+                if system == 'Windows':
+                    lib = ctypes.windll.LoadLibrary(path)
+                else:
+                    lib = ctypes.cdll.LoadLibrary(path)
 
-            if lib is not None:
-                # Confirm that the library's exported functions work.
-                try:
-                    # Build input parameters.
-                    treat = ctypes.create_string_buffer(5)
-                    for (i, c) in enumerate('treat'):
-                        try:
-                            treat[i] = c
-                        except:
-                            treat[i] = ord(c)
-                    chirp = ctypes.create_string_buffer(5)
+                if lib is not None:
+                    # Confirm that the library's exported functions work.
+                    try:
+                        # Build input parameters.
+                        treat = ctypes.create_string_buffer(5)
+                        for (i, c) in enumerate('treat'):
+                            try:
+                                treat[i] = c
+                            except:
+                                treat[i] = ord(c)
+                        chirp = ctypes.create_string_buffer(5)
 
-                    # Invoke compatibility validation method.
-                    r = lib.canary(chirp, treat)
+                        # Invoke compatibility validation method.
+                        r = lib.canary(chirp, treat)
 
-                    # Decode results.
-                    chirp = chirp.raw
-                    if isinstance(chirp, bytes):
-                        chirp = chirp.decode()
+                        # Decode results.
+                        chirp = chirp.raw
+                        if isinstance(chirp, bytes):
+                            chirp = chirp.decode()
 
-                    # Record the outputs.
-                    self.outputs.append((
-                        (system, path),
-                        (r, type(chirp), chirp)
-                    ))
+                        # Record the outputs.
+                        self.outputs.append((
+                            (system, path),
+                            (r, type(chirp), chirp)
+                        ))
 
-                    # Check that results are correct.
-                    if r != 0 or chirp != 'chirp':
+                        # Check that results are correct.
+                        if r != 0 or chirp != 'chirp':
+                            lib = None
+
+                    except:
                         lib = None
+                        self.exceptions.append((
+                            (system, path),
+                            (
+                                sys.exc_info()[0], sys.exc_info()[1],
+                                sys.exc_info()[2].tb_lineno
+                            )
+                        ))
 
-                except:
-                    lib = None
-                    self.exceptions.append((
-                        (system, path),
-                        (
-                            sys.exc_info()[0], sys.exc_info()[1],
-                            sys.exc_info()[2].tb_lineno
-                        )
-                    ))
-        except:
-            self.exceptions.append((
-                (system, path),
-                (
-                    sys.exc_info()[0], sys.exc_info()[1],
-                    sys.exc_info()[2].tb_lineno
-                )
-            ))
+            except:
+                self.exceptions.append((
+                    (system, path),
+                    (
+                        sys.exc_info()[0], sys.exc_info()[1],
+                        sys.exc_info()[2].tb_lineno
+                    )
+                ))
 
         return lib
 
