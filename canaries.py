@@ -6,6 +6,7 @@ files compatible with the operating environment.
 
 import doctest
 import sys
+import os.path
 import platform
 import ctypes
 
